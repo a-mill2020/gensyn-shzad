@@ -1,0 +1,1323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#1e0533">
+<title>Gensyn Health | Revenue Cycle Management</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;700;900&family=Plus+Jakarta+Sans:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+/* =========================================
+   LOCAL FONT — Honfleur
+   Place Honfleur.otf in the same folder
+========================================= */
+
+
+:root{
+  --plum:#1e0533;
+  --plum2:#2d0a4e;
+  --plum3:#3d1260;
+  --orange:#ff5a00;
+  --orange2:#ff7c33;
+  --peach:#ffe0c8;
+  --cream:#fff8f2;
+  --white:#ffffff;
+  --lavender:#f0e6ff;
+  /* Honfleur falls back to Unbounded if file not found */
+  --fd:'Honfleur','Unbounded',sans-serif;
+  --fb:'Plus Jakarta Sans',sans-serif;
+  --fm:'Space Mono',monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:var(--fb);background:var(--lavender);color:var(--plum);overflow-x:hidden;-webkit-font-smoothing:antialiased;}
+a{color:inherit;text-decoration:none;}
+button{font:inherit;cursor:pointer;border:none;background:none;}
+img,svg{display:block;}
+
+/* =========================================
+   NOISE TEXTURE OVERLAY
+========================================= */
+body::before{
+  content:'';position:fixed;inset:0;z-index:1000;pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  opacity:.35;mix-blend-mode:overlay;
+}
+
+/* =========================================
+   HEADER
+========================================= */
+header{
+  position:fixed;top:0;left:0;right:0;z-index:900;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:.6rem clamp(1rem,4vw,2.5rem);
+  background:rgba(30,5,51,0.9);
+  backdrop-filter:blur(18px);
+  border-bottom:2px solid rgba(255,90,0,0.25);
+}
+
+/* LOGO — now uses logo.svg image */
+.logo{
+  display:flex;align-items:center;gap:.5rem;
+  color:var(--cream);
+  text-decoration:none;
+}
+.logo-img{
+  height:36px;  /* adjust to taste */
+  width:auto;
+  display:block;
+}
+/* Fallback text in case logo.svg is missing */
+.logo-text{
+  font-family:var(--fd);font-weight:900;font-size:1.1rem;
+  color:var(--cream);letter-spacing:-.03em;
+}
+
+nav{display:flex;align-items:center;gap:clamp(.6rem,2vw,2rem);}
+.nl{
+  font-family:var(--fm);font-size:.62rem;font-weight:700;
+  text-transform:uppercase;letter-spacing:.1em;color:rgba(255,248,242,.55);
+  transition:color .2s;
+}
+.nl:hover{color:var(--orange);}
+.hcta{
+  display:inline-flex;align-items:center;gap:.35rem;
+  font-family:var(--fd);font-size:.65rem;font-weight:900;
+  text-transform:uppercase;letter-spacing:.04em;
+  color:var(--plum);background:var(--orange);
+  padding:.5rem 1rem;border-radius:6px;
+  border:2px solid var(--plum);
+  box-shadow:3px 3px 0 var(--plum);
+  transition:transform .15s,box-shadow .15s;
+}
+.hcta:hover{transform:translate(-2px,-2px);box-shadow:5px 5px 0 var(--plum);}
+.hcta:active{transform:translate(1px,1px);box-shadow:1px 1px 0 var(--plum);}
+
+/* Hamburger */
+.hbg{
+  display:none;flex-direction:column;gap:5px;width:40px;height:40px;
+  align-items:center;justify-content:center;
+  border:2px solid rgba(255,90,0,.4);border-radius:6px;
+}
+.hbg span{width:18px;height:2px;background:var(--cream);border-radius:2px;transition:all .3s;}
+.hbg.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+.hbg.open span:nth-child(2){opacity:0;}
+.hbg.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+@media(max-width:780px){
+  nav{display:none;}
+  .hcta{display:none;}
+  .hbg{display:flex;}
+}
+
+/* Mobile drawer */
+.mob-nav{
+  position:fixed;inset:0;z-index:880;
+  background:var(--plum2);
+  display:flex;flex-direction:column;justify-content:center;align-items:center;gap:2.5rem;
+  transform:translateX(100%);transition:transform .45s cubic-bezier(.76,0,.24,1);
+}
+.mob-nav.open{transform:translateX(0);}
+.mob-nav .nl{font-size:1.8rem;color:var(--cream);letter-spacing:.02em;}
+.mob-nav .nl:hover{color:var(--orange);}
+
+/* =========================================
+   HERO
+========================================= */
+.hero{
+  position:relative;z-index:1;
+  min-height:100svh;overflow:hidden;
+  display:flex;flex-direction:column;justify-content:flex-end;
+  padding:calc(70px + 2rem) clamp(1.25rem,6vw,4rem) 4rem;
+  background:var(--plum);
+}
+
+/* Big wobbly blob shapes */
+.blob{position:absolute;border-radius:50%;filter:blur(80px);pointer-events:none;}
+.blob1{width:600px;height:600px;background:rgba(61,18,96,0.8);top:-100px;right:-150px;animation:blobFloat1 12s ease-in-out infinite;}
+.blob2{width:400px;height:400px;background:rgba(255,90,0,0.12);bottom:-80px;left:-80px;animation:blobFloat2 9s ease-in-out infinite;}
+.blob3{width:250px;height:250px;background:rgba(255,90,0,0.08);top:40%;left:30%;animation:blobFloat3 15s ease-in-out infinite;}
+@keyframes blobFloat1{0%,100%{transform:translate(0,0) scale(1);}33%{transform:translate(30px,-20px) scale(1.05);}66%{transform:translate(-20px,30px) scale(.97);}}
+@keyframes blobFloat2{0%,100%{transform:translate(0,0) scale(1);}50%{transform:translate(20px,-25px) scale(1.08);}}
+@keyframes blobFloat3{0%,100%{transform:translate(0,0) scale(1);}50%{transform:translate(-30px,20px) scale(1.1);}}
+
+/* Dotted grid hero */
+.hero-dots{
+  position:absolute;inset:0;pointer-events:none;
+  background-image:radial-gradient(circle,rgba(255,90,0,.18) 1px,transparent 1px);
+  background-size:32px 32px;opacity:.4;
+}
+
+/* =========================================
+   DOCTOR ILLUSTRATION — full-screen SVG
+   Sits behind text, fades at bottom edge
+========================================= */
+.doctor-bg{
+  position:absolute;
+  /* Start below the header, span most of screen height */
+  top:0;
+  right:0;
+  /* Covers full width on portrait, anchored right on landscape */
+  width:100%;
+  height:100%;
+  pointer-events:none;
+  z-index:1;
+  display:flex;
+  align-items:flex-end;
+  justify-content:center;
+
+  /* Subtle fade at bottom so text stays readable */
+  -webkit-mask-image:linear-gradient(to bottom, rgba(0,0,0,0.85) 55%, rgba(0,0,0,0) 100%);
+  mask-image:linear-gradient(to bottom, rgba(0,0,0,0.85) 55%, rgba(0,0,0,0) 100%);
+}
+.doctor-bg img{
+  /* Fill the container while keeping aspect ratio */
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  object-position:center bottom;
+  /* Slight orange tint so it matches brand palette */
+  filter:
+    sepia(1)
+    saturate(3)
+    hue-rotate(340deg)
+    brightness(0.55)
+    contrast(1.1)
+    opacity(0.35);
+}
+
+/* On narrow portrait screens make it fill even taller */
+@media(max-width:600px){
+  .doctor-bg{
+    width:100%;
+    height:85%;
+    top:10%;
+    -webkit-mask-image:linear-gradient(to bottom, rgba(0,0,0,0.75) 40%, rgba(0,0,0,0) 95%);
+    mask-image:linear-gradient(to bottom, rgba(0,0,0,0.75) 40%, rgba(0,0,0,0) 95%);
+  }
+  .doctor-bg img{
+    object-position:top center;
+  }
+}
+
+/* =========================================
+   HERO INNER — content layer (above doctor)
+========================================= */
+.hero-inner{
+  position:relative;z-index:3;
+  max-width:1200px;margin:0 auto;width:100%;
+}
+
+/* ── LOGO SVG STAMP ──────────────────────
+   Replaces the old text stamp pill.
+   Place your stamp/badge SVG in the same
+   folder and name it  stamp-badge.svg
+   (or change the src below).
+   
+   Here we reference  doctorimage.svg
+   as the illustration and create a
+   clean pill wrapper for whatever SVG
+   you want in place of the old stamp.
+────────────────────────────────────────── */
+.stamp{
+
+}
+/* The SVG inside the stamp pill */
+.stamp-svg{
+  height:108px;
+  width:auto;
+  /* keep it orange to match */
+}
+.stamp-dot{width:6px;height:6px;border-radius:50%;background:var(--orange);animation:stampPulse 1.8s ease-in-out infinite;flex:none;}
+@keyframes stampPulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.4;transform:scale(1.5);}}
+
+/* Giant headline — now uses Honfleur */
+.hero-h1{
+  font-family:var(--fd);font-weight:900;
+  font-size:clamp(3rem,10vw,8.5rem);
+  line-height:.93;letter-spacing:-.04em;
+  color:var(--cream);margin-bottom:1.5rem;text-transform:uppercase;
+}
+.hero-h1 .line-orange{color:var(--orange);}
+.hero-h1 .line-outline{
+  -webkit-text-stroke:2px var(--cream);color:transparent;
+}
+
+.hero-bottom{
+  display:flex;align-items:flex-end;justify-content:space-between;
+  flex-wrap:wrap;gap:2rem;margin-top:2rem;
+}
+.hero-sub{
+  font-size:clamp(.95rem,1.6vw,1.1rem);line-height:1.7;
+  color:rgba(255,248,242,.6);max-width:480px;font-weight:400;
+}
+.hero-ctas{display:flex;flex-wrap:wrap;gap:.85rem;align-items:center;}
+/* Chunky cartoon button */
+.btn-chunky{
+  display:inline-flex;align-items:center;gap:.5rem;
+  font-family:var(--fd);font-weight:900;font-size:.78rem;text-transform:uppercase;letter-spacing:.03em;
+  padding:.85rem 1.75rem;border-radius:8px;
+  border:2.5px solid var(--cream);
+  color:var(--plum);background:var(--orange);
+  box-shadow:4px 4px 0 var(--cream);
+  transition:transform .15s cubic-bezier(.16,1,.3,1),box-shadow .15s;
+  position:relative;
+}
+.btn-chunky:hover{transform:translate(-3px,-3px);box-shadow:7px 7px 0 var(--cream);}
+.btn-chunky:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--cream);}
+.btn-chunky.ghost{background:transparent;color:var(--cream);border-color:rgba(255,248,242,.3);box-shadow:4px 4px 0 rgba(255,248,242,.2);}
+.btn-chunky.ghost:hover{border-color:var(--orange);color:var(--orange);box-shadow:7px 7px 0 rgba(255,90,0,.3);}
+
+/* Hero checklist */
+.hero-checks{
+  display:flex;flex-direction:column;gap:.5rem;
+  font-family:var(--fm);font-size:.68rem;letter-spacing:.04em;
+  color:rgba(255,248,242,.5);text-transform:uppercase;
+}
+.hero-checks span{display:flex;align-items:center;gap:.5rem;}
+.hero-checks span::before{
+  content:'✓';color:var(--orange);font-weight:700;font-size:.8rem;
+}
+
+/* Flying label stickers */
+.sticker{
+  position:absolute;z-index:4;
+  font-family:var(--fd);font-weight:900;font-size:.7rem;text-transform:uppercase;letter-spacing:.04em;
+  padding:.5rem .9rem;border-radius:8px;border:2px solid var(--plum);
+  box-shadow:3px 3px 0 var(--plum);
+  pointer-events:none;
+}
+.sticker1{top:18%;right:5%;background:var(--orange);color:var(--plum);transform:rotate(4deg);animation:stickerWiggle1 6s ease-in-out infinite;}
+.sticker2{bottom:22%;right:8%;background:var(--plum3);color:var(--cream);transform:rotate(-3deg);animation:stickerWiggle2 8s ease-in-out infinite;}
+.sticker3{top:55%;right:22%;background:var(--peach);color:var(--plum);transform:rotate(2deg);animation:stickerWiggle1 10s ease-in-out infinite;}
+@keyframes stickerWiggle1{0%,100%{transform:rotate(4deg) translateY(0);}50%{transform:rotate(4deg) translateY(-8px);}}
+@keyframes stickerWiggle2{0%,100%{transform:rotate(-3deg) translateY(0);}50%{transform:rotate(-3deg) translateY(-10px);}}
+@media(max-width:860px){.sticker{display:none;}}
+
+/* =========================================
+   MARQUEE STRIP
+========================================= */
+.marquee-wrap{
+  background:var(--orange);border-top:2.5px solid var(--plum);border-bottom:2.5px solid var(--plum);
+  padding:.9rem 0;overflow:hidden;position:relative;z-index:2;
+}
+.marquee-track{
+  display:flex;gap:0;white-space:nowrap;
+  animation:marqueeRoll 22s linear infinite;
+}
+.marquee-track.rev{animation-direction:reverse;animation-duration:28s;}
+.mitem{
+  display:inline-flex;align-items:center;gap:1.2rem;padding:0 1.5rem;flex-shrink:0;
+  font-family:var(--fd);font-weight:700;font-size:.75rem;text-transform:uppercase;letter-spacing:.04em;
+  color:var(--plum);
+}
+.msep{font-size:1rem;opacity:.4;}
+@keyframes marqueeRoll{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+
+/* =========================================
+   SECTION SHELL
+========================================= */
+.sec{padding:clamp(4rem,9vw,7rem) clamp(1.25rem,5vw,3.5rem);position:relative;z-index:1;}
+.sec-inner{max-width:1200px;margin:0 auto;}
+.label{
+  font-family:var(--fm);font-size:.65rem;font-weight:700;
+  text-transform:uppercase;letter-spacing:.16em;color:var(--orange);
+  margin-bottom:.75rem;display:flex;align-items:center;gap:.5rem;
+}
+.label::before{content:'';width:20px;height:2px;background:var(--orange);}
+.sec-h{
+  font-family:var(--fd);font-weight:900;
+  font-size:clamp(2rem,5vw,3.8rem);
+  letter-spacing:-.03em;line-height:1;text-transform:uppercase;
+  margin-bottom:1rem;
+}
+.sec-p{font-size:1rem;line-height:1.75;color:rgba(30,5,51,.65);max-width:560px;font-weight:400;}
+
+/* =========================================
+   SERVICES — HORIZONTAL ACCORDION
+========================================= */
+#services{background:var(--lavender);}
+.svc-accordion{
+  display:flex;gap:0;
+  border:2.5px solid var(--plum);border-radius:16px;overflow:hidden;
+  margin-top:3rem;min-height:420px;
+}
+.svc-panel{
+  flex:0 0 56px;overflow:hidden;
+  transition:flex .55s cubic-bezier(.76,0,.24,1);
+  border-right:2px solid var(--plum);cursor:pointer;
+  position:relative;background:var(--cream);
+}
+.svc-panel:last-child{border-right:none;}
+.svc-panel.open{flex:1;}
+.svc-panel:hover:not(.open){background:rgba(255,90,0,.05);}
+
+.svc-tab{
+  position:absolute;top:0;left:0;bottom:0;width:56px;
+  display:flex;align-items:center;justify-content:center;
+  flex-direction:column;gap:.6rem;
+}
+.svc-tab-label{
+  font-family:var(--fd);font-size:.6rem;font-weight:900;text-transform:uppercase;letter-spacing:.1em;
+  color:var(--plum);white-space:nowrap;transform:rotate(-90deg);opacity:.6;
+  transition:opacity .2s;
+}
+.svc-panel.open .svc-tab-label{opacity:0;}
+.svc-tab-ico{
+  width:32px;height:32px;border-radius:7px;
+  background:rgba(255,90,0,.12);border:1.5px solid rgba(255,90,0,.3);
+  display:flex;align-items:center;justify-content:center;flex:none;
+}
+.svc-tab-ico svg{width:16px;height:16px;color:var(--orange);}
+
+.svc-content{
+  position:absolute;top:0;left:56px;right:0;bottom:0;
+  padding:2.5rem 2rem;opacity:0;transition:opacity .3s;pointer-events:none;
+  overflow-y:auto;
+}
+.svc-panel.open .svc-content{opacity:1;pointer-events:all;transition-delay:.2s;}
+.svc-content-title{
+  font-family:var(--fd);font-weight:900;font-size:1.4rem;text-transform:uppercase;
+  letter-spacing:-.02em;margin-bottom:.75rem;line-height:1.05;
+}
+.svc-content-desc{font-size:.93rem;color:rgba(30,5,51,.6);line-height:1.7;margin-bottom:1.5rem;}
+.svc-tags{display:flex;flex-wrap:wrap;gap:.4rem;}
+.svc-tag{
+  font-family:var(--fm);font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;
+  padding:.3rem .7rem;border-radius:30px;
+  background:var(--orange);color:var(--plum);
+  border:2px solid var(--plum);
+  box-shadow:2px 2px 0 var(--plum);
+}
+@media(max-width:700px){
+  .svc-accordion{flex-direction:column;min-height:unset;}
+  .svc-panel{flex:0 0 48px;}
+  .svc-panel.open{flex:0 0 340px;}
+  .svc-tab{flex-direction:row;width:100%;height:48px;padding:0 1rem;justify-content:flex-start;gap:.7rem;}
+  .svc-tab-label{transform:none;opacity:1;}
+  .svc-panel.open .svc-tab-label{opacity:1;}
+  .svc-panel{border-right:none;border-bottom:2px solid var(--plum);}
+  .svc-content{top:48px;left:0;}
+}
+
+/* =========================================
+   STATS — BIG HORIZONTAL ROW
+========================================= */
+.stats-row{
+  background:var(--plum);
+  padding:clamp(2.5rem,6vw,4rem) clamp(1.25rem,5vw,3.5rem);
+  border-top:2.5px solid var(--orange);border-bottom:2.5px solid var(--orange);
+}
+.stats-inner{
+  max-width:1200px;margin:0 auto;
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:0;
+}
+@media(max-width:600px){.stats-inner{grid-template-columns:repeat(2,1fr);}}
+.stat{
+  text-align:center;padding:1.5rem 1rem;
+  border-right:1px solid rgba(255,90,0,.2);
+}
+.stat:last-child{border-right:none;}
+@media(max-width:600px){.stat:nth-child(2){border-right:none;}.stat:nth-child(3){border-top:1px solid rgba(255,90,0,.2);}.stat:nth-child(4){border-top:1px solid rgba(255,90,0,.2);border-right:none;}}
+.stat-n{
+  font-family:var(--fd);font-weight:900;
+  font-size:clamp(2.8rem,5vw,4.5rem);letter-spacing:-.04em;line-height:1;
+  color:var(--orange);
+}
+.stat-l{font-family:var(--fm);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,248,242,.4);margin-top:.4rem;}
+
+/* =========================================
+   AI SECTION — SPLIT
+========================================= */
+#ai{background:var(--cream);}
+.ai-split{display:grid;grid-template-columns:1fr 1fr;gap:clamp(2rem,5vw,5rem);align-items:center;}
+@media(max-width:820px){.ai-split{grid-template-columns:1fr;}}
+
+/* Terminal window */
+.terminal{
+  background:var(--plum);border:2.5px solid var(--plum);border-radius:14px;
+  overflow:hidden;
+  box-shadow:6px 6px 0 var(--plum);
+}
+.term-bar{
+  background:var(--plum2);padding:.7rem 1rem;
+  display:flex;align-items:center;gap:.5rem;
+  border-bottom:1.5px solid rgba(255,90,0,.2);
+}
+.tdot{width:11px;height:11px;border-radius:50%;border:2px solid rgba(255,248,242,.15);}
+.tdot:nth-child(1){background:#ff5f57;}
+.tdot:nth-child(2){background:#febc2e;}
+.tdot:nth-child(3){background:#28c840;}
+.term-title{font-family:var(--fm);font-size:.62rem;letter-spacing:.1em;color:rgba(255,248,242,.35);margin-left:.5rem;}
+.term-body{padding:1.5rem;font-family:var(--fm);font-size:.76rem;line-height:2;min-height:260px;}
+.tc{color:var(--orange);}
+.tg{color:rgba(255,248,242,.85);}
+.td{color:rgba(255,248,242,.35);}
+.tcursor{display:inline-block;width:8px;height:14px;background:var(--orange);vertical-align:middle;margin-left:2px;animation:cur .9s step-end infinite;}
+@keyframes cur{0%,100%{opacity:1;}50%{opacity:0;}}
+
+.ai-features{display:flex;flex-direction:column;gap:1.5rem;margin-top:2rem;}
+.ai-feat{display:flex;align-items:flex-start;gap:1rem;}
+.ai-feat-ico{
+  flex:none;width:42px;height:42px;border-radius:10px;
+  background:var(--orange);color:var(--plum);
+  display:flex;align-items:center;justify-content:center;
+  border:2px solid var(--plum);box-shadow:3px 3px 0 var(--plum);
+}
+.ai-feat-ico svg{width:18px;height:18px;}
+.ai-feat-title{font-family:var(--fd);font-weight:700;font-size:.9rem;text-transform:uppercase;letter-spacing:-.01em;margin-bottom:.25rem;}
+.ai-feat-desc{font-size:.88rem;color:rgba(30,5,51,.6);line-height:1.6;}
+
+/* =========================================
+   SPECIALTIES PILL ROW
+========================================= */
+.spec-section{background:var(--plum2);padding:3rem clamp(1.25rem,5vw,3.5rem);border-top:2.5px solid rgba(255,90,0,.25);border-bottom:2.5px solid rgba(255,90,0,.25);}
+.spec-label{font-family:var(--fm);font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,248,242,.35);margin-bottom:1.25rem;max-width:1200px;margin-inline:auto;}
+.spec-pills{display:flex;flex-wrap:wrap;gap:.75rem;max-width:1200px;margin:0 auto;}
+.spec-pill{
+  font-family:var(--fd);font-weight:700;font-size:.78rem;text-transform:uppercase;letter-spacing:.02em;
+  padding:.65rem 1.2rem;border-radius:40px;
+  color:var(--plum);background:var(--peach);
+  border:2px solid var(--plum);box-shadow:3px 3px 0 var(--plum);
+  transition:transform .15s,box-shadow .15s;cursor:default;
+}
+.spec-pill:hover{transform:translate(-2px,-2px);box-shadow:5px 5px 0 var(--plum);}
+.spec-pill.orange{background:var(--orange);color:var(--plum);}
+
+/* =========================================
+   PRICING
+========================================= */
+#pricing{background:var(--lavender);}
+.pricing-tabs{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:2.5rem;}
+.ptab{
+  font-family:var(--fd);font-size:.68rem;font-weight:900;text-transform:uppercase;letter-spacing:.03em;
+  padding:.55rem 1.1rem;border-radius:6px;
+  border:2px solid var(--plum);color:var(--plum);
+  box-shadow:3px 3px 0 var(--plum);
+  transition:transform .15s,box-shadow .15s,background .15s,color .15s;
+  cursor:pointer;
+}
+.ptab.active,.ptab:hover{background:var(--orange);color:var(--plum);transform:translate(-2px,-2px);box-shadow:5px 5px 0 var(--plum);}
+.ptab:active{transform:translate(1px,1px);box-shadow:1px 1px 0 var(--plum);}
+.pricing-panel{display:none;}
+.pricing-panel.active{display:block;}
+
+.pricing-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1.5rem;}
+.price-card{
+  background:var(--cream);
+  border:2.5px solid var(--plum);border-radius:14px;
+  padding:2rem 1.75rem;
+  box-shadow:5px 5px 0 var(--plum);
+  transition:transform .15s,box-shadow .15s;position:relative;
+}
+.price-card:hover{transform:translate(-3px,-3px);box-shadow:8px 8px 0 var(--plum);}
+.price-card.hot{background:var(--orange);}
+.price-card.hot::before{
+  content:'MOST POPULAR';position:absolute;top:-14px;left:50%;transform:translateX(-50%);
+  font-family:var(--fd);font-size:.55rem;font-weight:900;letter-spacing:.12em;text-transform:uppercase;
+  background:var(--plum);color:var(--cream);padding:.3rem .8rem;border-radius:20px;white-space:nowrap;
+}
+.plan-name{font-family:var(--fm);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(30,5,51,.5);margin-bottom:.5rem;}
+.plan-price{font-family:var(--fd);font-weight:900;font-size:3rem;letter-spacing:-.04em;line-height:1;margin-bottom:.2rem;}
+.plan-unit{font-family:var(--fm);font-size:.62rem;letter-spacing:.06em;text-transform:uppercase;color:rgba(30,5,51,.45);margin-bottom:1.5rem;}
+.plan-feats{list-style:none;display:flex;flex-direction:column;gap:.55rem;margin-bottom:1.75rem;}
+.plan-feats li{display:flex;align-items:flex-start;gap:.6rem;font-size:.88rem;line-height:1.4;}
+.plan-feats li::before{content:'→';color:var(--orange);flex:none;font-weight:700;}
+.price-card.hot .plan-feats li::before{color:var(--plum);}
+.plan-btn{
+  display:block;width:100%;text-align:center;
+  font-family:var(--fd);font-weight:900;font-size:.75rem;text-transform:uppercase;letter-spacing:.04em;
+  padding:.85rem;border-radius:8px;
+  border:2px solid var(--plum);background:var(--plum);color:var(--cream);
+  box-shadow:3px 3px 0 rgba(30,5,51,.3);
+  transition:transform .15s,box-shadow .15s,background .15s,color .15s;
+}
+.plan-btn:hover{transform:translate(-2px,-2px);box-shadow:5px 5px 0 rgba(30,5,51,.4);}
+.price-card.hot .plan-btn{background:var(--plum);color:var(--cream);}
+
+/* =========================================
+   WHY US — HORIZONTAL LINES
+========================================= */
+#why{background:var(--cream);}
+.why-list{margin-top:3rem;}
+.why-row{
+  display:grid;grid-template-columns:80px 1fr 1fr;gap:2rem;align-items:start;
+  padding:2rem 0;border-top:2px solid rgba(30,5,51,.12);
+  transition:background .2s;
+}
+.why-row:last-child{border-bottom:2px solid rgba(30,5,51,.12);}
+.why-row:hover{background:rgba(255,90,0,.04);}
+@media(max-width:640px){.why-row{grid-template-columns:1fr;gap:.75rem;}}
+.why-ico-wrap{
+  width:56px;height:56px;border-radius:12px;
+  background:var(--orange);color:var(--plum);
+  display:flex;align-items:center;justify-content:center;
+  border:2px solid var(--plum);box-shadow:3px 3px 0 var(--plum);flex:none;
+}
+.why-ico-wrap svg{width:24px;height:24px;}
+.why-title{font-family:var(--fd);font-weight:900;font-size:1.05rem;text-transform:uppercase;letter-spacing:-.01em;line-height:1.1;}
+.why-desc{font-size:.92rem;color:rgba(30,5,51,.6);line-height:1.7;}
+
+/* =========================================
+   PROCESS — FLOWING STEPS
+========================================= */
+#process{background:var(--plum);}
+#process .sec-h{color:var(--cream);}
+#process .label{color:var(--orange);}
+#process .label::before{background:var(--orange);}
+.process-steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:0;margin-top:3rem;border:2px solid rgba(255,90,0,.25);border-radius:14px;overflow:hidden;}
+.pstep{
+  padding:2rem 1.75rem;border-right:1.5px solid rgba(255,90,0,.15);
+  position:relative;
+  transition:background .25s;
+}
+.pstep:last-child{border-right:none;}
+.pstep:hover{background:rgba(255,90,0,.06);}
+@media(max-width:600px){.pstep{border-right:none;border-bottom:1.5px solid rgba(255,90,0,.15);}.pstep:last-child{border-bottom:none;}}
+.pstep-num{
+  font-family:var(--fd);font-weight:900;font-size:3.5rem;
+  color:rgba(255,90,0,.15);letter-spacing:-.05em;line-height:1;margin-bottom:.75rem;
+}
+.pstep-title{font-family:var(--fd);font-weight:700;font-size:.95rem;text-transform:uppercase;color:var(--cream);margin-bottom:.5rem;}
+.pstep-desc{font-size:.88rem;color:rgba(255,248,242,.5);line-height:1.6;}
+
+/* =========================================
+   CONTACT
+========================================= */
+#contact{background:var(--plum2);}
+.contact-wrap{
+  display:grid;grid-template-columns:1fr 1fr;gap:clamp(2rem,5vw,5rem);align-items:start;
+}
+@media(max-width:820px){.contact-wrap{grid-template-columns:1fr;}}
+#contact .sec-h{color:var(--cream);}
+#contact .label{color:var(--orange);}
+#contact .label::before{background:var(--orange);}
+#contact .sec-p{color:rgba(255,248,242,.55);}
+
+.contact-meta{display:flex;flex-direction:column;gap:1rem;margin-top:2rem;}
+.cmeta{
+  display:flex;align-items:center;gap:.9rem;
+  padding:.9rem 1.1rem;border-radius:10px;
+  border:2px solid rgba(255,90,0,.2);
+  transition:border-color .2s,background .2s;
+}
+.cmeta:hover{border-color:var(--orange);background:rgba(255,90,0,.07);}
+.cmeta-ico{
+  flex:none;width:40px;height:40px;border-radius:50%;
+  background:var(--orange);color:var(--plum);
+  display:flex;align-items:center;justify-content:center;
+}
+.cmeta-ico svg{width:18px;height:18px;}
+.cmeta-l{font-family:var(--fm);font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,248,242,.35);}
+.cmeta-v{font-family:var(--fd);font-weight:700;font-size:.95rem;color:var(--cream);}
+
+/* Form */
+.cf{display:flex;flex-direction:column;gap:1rem;}
+.cf-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+@media(max-width:480px){.cf-row{grid-template-columns:1fr;}}
+.cf-field{display:flex;flex-direction:column;gap:.35rem;}
+.cf-field label{font-family:var(--fm);font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,248,242,.4);}
+.cf-field input,.cf-field select,.cf-field textarea{
+  background:rgba(255,248,242,.06);border:2px solid rgba(255,90,0,.2);border-radius:8px;
+  padding:.8rem 1rem;font-family:var(--fb);font-size:.95rem;color:var(--cream);
+  outline:none;transition:border-color .2s,background .2s;-webkit-appearance:none;
+}
+.cf-field input::placeholder,.cf-field textarea::placeholder{color:rgba(255,248,242,.2);}
+.cf-field select{cursor:pointer;}
+.cf-field select option{background:var(--plum);color:var(--cream);}
+.cf-field input:focus,.cf-field select:focus,.cf-field textarea:focus{border-color:var(--orange);background:rgba(255,90,0,.08);}
+.cf-field textarea{resize:vertical;min-height:90px;}
+.cf-submit{
+  font-family:var(--fd);font-weight:900;font-size:.78rem;text-transform:uppercase;letter-spacing:.04em;
+  padding:1.1rem;border-radius:8px;
+  border:2.5px solid var(--plum);background:var(--orange);color:var(--plum);
+  box-shadow:4px 4px 0 rgba(0,0,0,.3);
+  cursor:pointer;transition:transform .15s,box-shadow .15s;
+}
+.cf-submit:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 rgba(0,0,0,.35);}
+.cf-submit:active{transform:translate(2px,2px);box-shadow:1px 1px 0 rgba(0,0,0,.2);}
+.cf-success{display:none;flex-direction:column;align-items:center;text-align:center;padding:3rem;gap:1rem;}
+.cf-success.show{display:flex;}
+.cf-success-ico{
+  width:64px;height:64px;border-radius:50%;
+  background:var(--orange);color:var(--plum);
+  display:flex;align-items:center;justify-content:center;
+  border:3px solid var(--plum);box-shadow:4px 4px 0 rgba(0,0,0,.3);
+  animation:popIn .4s cubic-bezier(.16,1,.3,1);
+}
+@keyframes popIn{from{transform:scale(.3);opacity:0;}to{transform:scale(1);opacity:1;}}
+.cf-success-ico svg{width:30px;height:30px;}
+.cf-success h3{font-family:var(--fd);font-weight:900;font-size:1.4rem;text-transform:uppercase;color:var(--cream);}
+.cf-success p{font-size:.9rem;color:rgba(255,248,242,.5);line-height:1.6;}
+
+/* =========================================
+   FOOTER
+========================================= */
+footer{
+  background:var(--plum);border-top:2.5px solid rgba(255,90,0,.2);
+  padding:2rem clamp(1.25rem,5vw,3.5rem);
+  display:flex;flex-wrap:wrap;gap:1rem;justify-content:space-between;align-items:center;
+  position:relative;z-index:1;
+}
+.foot-logo{font-family:var(--fd);font-weight:900;font-size:1rem;color:var(--cream);letter-spacing:-.02em;}
+.foot-logo img{height:28px;width:auto;}
+.foot-links{display:flex;flex-wrap:wrap;gap:1.25rem;}
+.foot-links a{font-family:var(--fm);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,248,242,.35);transition:color .2s;}
+.foot-links a:hover{color:var(--orange);}
+.foot-note{font-family:var(--fm);font-size:.58rem;letter-spacing:.06em;color:rgba(255,248,242,.2);}
+
+/* =========================================
+   MOBILE STICKY BAR
+========================================= */
+.mob-bar{
+  display:none;position:fixed;bottom:0;left:0;right:0;z-index:800;
+  background:var(--plum);border-top:2px solid rgba(255,90,0,.3);
+  padding:.6rem 1rem;gap:.5rem;
+  padding-bottom:max(.6rem,env(safe-area-inset-bottom));
+}
+.mob-bar a{
+  flex:1;display:flex;align-items:center;justify-content:center;gap:.4rem;
+  font-family:var(--fd);font-size:.65rem;font-weight:900;text-transform:uppercase;letter-spacing:.03em;
+  padding:.75rem;border-radius:7px;border:2px solid var(--plum);transition:all .15s;
+}
+.mob-bar a svg{width:13px;height:13px;}
+.m-call{background:var(--orange);color:var(--plum);box-shadow:3px 3px 0 rgba(255,255,255,.15);}
+.m-msg{background:transparent;color:var(--orange);border-color:rgba(255,90,0,.4);}
+@media(max-width:780px){
+  .mob-bar{display:flex;}
+  body{padding-bottom:calc(72px + env(safe-area-inset-bottom));}
+}
+
+/* =========================================
+   SCROLL REVEAL
+========================================= */
+.r{opacity:0;transform:translateY(28px);transition:opacity .65s cubic-bezier(.16,1,.3,1),transform .65s cubic-bezier(.16,1,.3,1);}
+.r.d1{transition-delay:.1s;}.r.d2{transition-delay:.2s;}.r.d3{transition-delay:.3s;}
+.r.v{opacity:1;transform:translateY(0);}
+
+@media(prefers-reduced-motion:reduce){
+  *{animation-duration:.001ms!important;transition-duration:.001ms!important;}
+  .r{opacity:1;transform:none;}
+}
+</style>
+</head>
+<body>
+
+<!-- ===== MOBILE NAV ===== -->
+<div class="mob-nav" id="mobNav">
+  <a href="#services" class="nl" style="font-size:2rem;color:var(--cream);">Services</a>
+  <a href="#ai" class="nl" style="font-size:2rem;color:var(--cream);">AI Docs</a>
+  <a href="#pricing" class="nl" style="font-size:2rem;color:var(--cream);">Pricing</a>
+  <a href="#why" class="nl" style="font-size:2rem;color:var(--cream);">Why Us</a>
+  <a href="#contact" class="nl" style="font-size:2rem;color:var(--cream);">Contact</a>
+  <a href="#contact" class="btn-chunky" style="margin-top:1rem;">Free Consultation</a>
+</div>
+
+<!-- ===== HEADER ===== -->
+<header>
+  <a href="#top" class="logo">
+    <!--
+      LOGO SVG: place your logo file as "logo.svg" in the same folder.
+      The <img> below loads it. If it fails to load the onerror shows
+      the text fallback automatically.
+    -->
+    <img
+      class="logo-img"
+      src="logo.svg"
+      alt="Gensyn Health"
+      onerror="this.style.display='none';this.nextElementSibling.style.display='block';"
+    >
+    <span class="logo-text" style="display:none;">Gensyn <span style="color:var(--orange);">Health</span></span>
+  </a>
+  <nav>
+    <a href="#services" class="nl">Services</a>
+    <a href="#ai" class="nl">AI Docs</a>
+    <a href="#pricing" class="nl">Pricing</a>
+    <a href="#why" class="nl">Why Us</a>
+    <a href="#contact" class="nl">Contact</a>
+  </nav>
+  <a href="#contact" class="hcta">Free Consultation</a>
+  <button class="hbg" id="hbg" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</header>
+
+<!-- ===== HERO ===== -->
+<section class="hero" id="top">
+  <div class="blob blob1"></div>
+  <div class="blob blob2"></div>
+  <div class="blob blob3"></div>
+  <div class="hero-dots"></div>
+
+  <!--
+    =============================================
+    DOCTOR ILLUSTRATION — full-bleed background
+    Place your file as "doctorimage.svg" in the
+    same folder. It fills the hero, fades at the
+    bottom, and auto-resizes on all screens.
+    =============================================
+  -->
+  <div class="doctor-bg" aria-hidden="true">
+  </div>
+
+  <!-- Floating stickers -->
+  <div class="sticker sticker1">98% Clean Claims</div>
+  <div class="sticker sticker2">HIPAA Certified</div>
+  <div class="sticker sticker3">AI Powered</div>
+
+  <div class="hero-inner">
+    <!--
+      STAMP: The old text "Revenue Cycle Management · Healthcare Solutions"
+      is replaced by an SVG image. Place your SVG as "stamp-logo.svg".
+      The pulse dot + label text are kept for fallback / legibility.
+    -->
+    <div class="stamp r">
+      <!--
+        If you have a horizontal wordmark / tag SVG, point src here.
+        Otherwise remove the <img> and the text fallback shows.
+      -->
+      <img
+        class="stamp-svg"
+        src="stamp-logo.png"
+        alt="Revenue Cycle Management · Healthcare Solutions"
+        onerror="this.style.display='none';this.nextElementSibling.style.display='inline';"
+      >
+      <span style="display:none;">Revenue Cycle Management · Healthcare Solutions</span>
+    </div>
+
+    <h1 class="hero-h1 r d1">
+      <span id="scramWord">Maximize</span><br>
+      <span class="line-orange">Revenue.</span><br>
+      <span class="line-outline">Minimize</span><br>
+      Burden.
+    </h1>
+    <div class="hero-bottom r d2">
+      <p class="hero-sub">At Gensyn Health, we help healthcare providers streamline operations, improve cash flow, and focus on what matters most patient care. Medical billing, prior auth, credentialing, and AI clinical docs.</p>
+      <div style="display:flex;flex-direction:column;gap:1.5rem;align-items:flex-end;">
+        <div class="hero-ctas">
+          <a href="#contact" class="btn-chunky">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+            Free Consultation
+          </a>
+          <a href="#services" class="btn-chunky ghost">Our Services →</a>
+        </div>
+        <div class="hero-checks">
+          <span>Medical Billing &amp; Coding</span>
+          <span>Prior Authorization</span>
+          <span>AI Clinical Documentation</span>
+          <span>Credentialing &amp; Enrollment</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== MARQUEE ===== -->
+<div class="marquee-wrap">
+  <div class="marquee-track" id="mq1">
+    <div class="mitem">Medical Billing <span class="msep">✦</span></div>
+    <div class="mitem">Prior Authorization <span class="msep">✦</span></div>
+    <div class="mitem">Insurance Verification <span class="msep">✦</span></div>
+    <div class="mitem">Credentialing <span class="msep">✦</span></div>
+    <div class="mitem">Denial Management <span class="msep">✦</span></div>
+    <div class="mitem">AI Clinical Documentation <span class="msep">✦</span></div>
+    <div class="mitem">A/R Follow-Up <span class="msep">✦</span></div>
+    <div class="mitem">Practice Analytics <span class="msep">✦</span></div>
+    <div class="mitem">Medical Billing <span class="msep">✦</span></div>
+    <div class="mitem">Prior Authorization <span class="msep">✦</span></div>
+    <div class="mitem">Insurance Verification <span class="msep">✦</span></div>
+    <div class="mitem">Credentialing <span class="msep">✦</span></div>
+    <div class="mitem">Denial Management <span class="msep">✦</span></div>
+    <div class="mitem">AI Clinical Documentation <span class="msep">✦</span></div>
+    <div class="mitem">A/R Follow-Up <span class="msep">✦</span></div>
+    <div class="mitem">Practice Analytics <span class="msep">✦</span></div>
+  </div>
+</div>
+
+<!-- ===== SERVICES ===== -->
+<section class="sec" id="services">
+  <div class="sec-inner">
+    <div class="r"><div class="label">What We Do</div><h2 class="sec-h">Full Revenue Cycle,<br>All Under One Roof</h2><p class="sec-p">Click a service to explore what we handle for your practice.</p></div>
+    <div class="svc-accordion r d2" id="svcAccordion">
+
+      <div class="svc-panel open">
+        <div class="svc-tab">
+          <div class="svc-tab-label">Billing</div>
+        </div>
+        <div class="svc-content">
+          <div class="svc-content-title">Medical Billing &amp;<br>Revenue Cycle</div>
+          <div class="svc-content-desc">We handle every step from charge entry to payment posting to denial resolution. Faster reimbursements, fewer errors, higher collection rates.</div>
+          <div class="svc-tags">
+            <span class="svc-tag">Charge Entry</span><span class="svc-tag">ICD-10 Coding</span><span class="svc-tag">CPT / HCPCS</span><span class="svc-tag">Claim Submission</span><span class="svc-tag">Payment Posting</span><span class="svc-tag">A/R Management</span><span class="svc-tag">Denial Resolution</span><span class="svc-tag">Patient Billing</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="svc-panel">
+        <div class="svc-tab">
+          <div class="svc-tab-label">Prior Auth</div>
+        </div>
+        <div class="svc-content">
+          <div class="svc-content-title">Prior Authorization<br>Services</div>
+          <div class="svc-content-desc">Our dedicated specialists take the authorization grind off your staff. Faster approvals, reduced delays, happier patients.</div>
+          <div class="svc-tags">
+            <span class="svc-tag">Imaging Auth</span><span class="svc-tag">Medication Prior Auth</span><span class="svc-tag">Surgical Procedures</span><span class="svc-tag">Specialty Treatments</span><span class="svc-tag">DME Auth</span><span class="svc-tag">Referral Coordination</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="svc-panel">
+        <div class="svc-tab">
+          <div class="svc-tab-label">Verify</div>
+        </div>
+        <div class="svc-content">
+          <div class="svc-content-title">Insurance<br>Verification</div>
+          <div class="svc-content-desc">Proactive eligibility checks before every appointment. No surprise denials. No revenue lost before it's earned.</div>
+          <div class="svc-tags">
+            <span class="svc-tag">Eligibility Checks</span><span class="svc-tag">Benefits Verification</span><span class="svc-tag">Co-pay Calc</span><span class="svc-tag">Coverage Confirm</span><span class="svc-tag">Pre-Cert Tracking</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="svc-panel">
+        <div class="svc-tab">
+          <div class="svc-tab-label">Credentialing</div>
+        </div>
+        <div class="svc-content">
+          <div class="svc-content-title">Credentialing &amp;<br>Enrollment</div>
+          <div class="svc-content-desc">Get in-network faster. We manage the entire credentialing process initial enrollment, re-credentialing, and CAQH maintenance.</div>
+          <div class="svc-tags">
+            <span class="svc-tag">Provider Cred</span><span class="svc-tag">Re-Credentialing</span><span class="svc-tag">CAQH</span><span class="svc-tag">Medicare</span><span class="svc-tag">Medicaid</span><span class="svc-tag">Commercial Plans</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="svc-panel">
+        <div class="svc-tab">
+          <div class="svc-tab-label">Analytics</div>
+        </div>
+        <div class="svc-content">
+          <div class="svc-content-title">Denial Mgmt &amp;<br>Practice Analytics</div>
+          <div class="svc-content-desc">We don't let revenue sit on the table. Real-time reporting on KPIs, denial trends, A/R aging, and collection rates, no guesswork.</div>
+          <div class="svc-tags">
+            <span class="svc-tag">Root Cause Analysis</span><span class="svc-tag">Appeal Letters</span><span class="svc-tag">A/R Aging</span><span class="svc-tag">Denial Trends</span><span class="svc-tag">Monthly Reports</span><span class="svc-tag">Payer Mix</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ===== STATS ===== -->
+<div class="stats-row">
+  <div class="stats-inner">
+    <div class="stat r"><div class="stat-n" data-target="98" data-suffix="%">0%</div><div class="stat-l">Clean Claim Rate</div></div>
+    <div class="stat r d1"><div class="stat-n" data-target="45" data-suffix="d">0d</div><div class="stat-l">Avg Collection Cycle</div></div>
+    <div class="stat r d2"><div class="stat-n" data-target="24" data-suffix="h">0h</div><div class="stat-l">Claim Submission</div></div>
+    <div class="stat r d3"><div class="stat-n">$0</div><div class="stat-l">Setup Fees Ever</div></div>
+  </div>
+</div>
+
+<!-- ===== AI SECTION ===== -->
+<section class="sec" id="ai">
+  <div class="sec-inner">
+    <div class="ai-split">
+      <div>
+        <div class="label r">AI-Powered</div>
+        <h2 class="sec-h r d1">Clinical Docs<br><span style="color:var(--orange);">On Autopilot</span></h2>
+        <p class="sec-p r d2">Cut hours of charting. Reduce burnout. Our HIPAA-compliant AI generates accurate clinical notes in real time from voice or text straight into your EHR.</p>
+        <div class="ai-features r d3">
+          <div class="ai-feat">
+            <div class="ai-feat-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/></svg></div>
+            <div><div class="ai-feat-title">Voice-to-Documentation</div><div class="ai-feat-desc">Speak naturally. AI turns narration into structured SOAP notes instantly.</div></div>
+          </div>
+          <div class="ai-feat">
+            <div class="ai-feat-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div>
+            <div><div class="ai-feat-title">EHR Integration</div><div class="ai-feat-desc">Syncs directly into your existing system. No workflow disruption.</div></div>
+          </div>
+          <div class="ai-feat">
+            <div class="ai-feat-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+            <div><div class="ai-feat-title">HIPAA-Compliant</div><div class="ai-feat-desc">End-to-end encrypted, audit-logged. Full compliance, always.</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="r d2">
+        <div class="terminal">
+          <div class="term-bar">
+            <div class="tdot"></div><div class="tdot"></div><div class="tdot"></div>
+            <span class="term-title">gensyn-ai-docs · LIVE SESSION</span>
+          </div>
+          <div class="term-body">
+            <div class="tc">&gt; Session initialized</div>
+            <div class="td">Provider: Dr. Reyes · Internal Medicine</div>
+            <div class="td">Patient: [ENCRYPTED] · Visit: Follow-up</div>
+            <br>
+            <div class="tc">[AI] Listening...</div>
+            <br>
+            <div class="tg">SUBJECTIVE:</div>
+            <div class="td" id="tl1"></div>
+            <br>
+            <div class="tg">OBJECTIVE:</div>
+            <div class="td" id="tl2"></div>
+            <br>
+            <div class="tc" id="tl3"></div>
+            <span class="tcursor" id="tcur"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SPECIALTIES ===== -->
+<div class="spec-section">
+  <div class="spec-label">Specialties We Serve, Nationwide</div>
+  <div class="spec-pills">
+    <div class="spec-pill orange">Internal Medicine</div>
+    <div class="spec-pill">Family Medicine</div>
+    <div class="spec-pill orange">Pediatrics</div>
+    <div class="spec-pill">OB/GYN</div>
+    <div class="spec-pill orange">Telemedicine</div>
+    <div class="spec-pill">Urgent Care</div>
+    <div class="spec-pill orange">Independent Practices</div>
+    <div class="spec-pill">Multi-Location Clinics</div>
+    <div class="spec-pill orange">Specialist Groups</div>
+  </div>
+</div>
+
+<!-- ===== PRICING ===== -->
+<section class="sec" id="pricing">
+  <div class="sec-inner">
+    <div class="r"><div class="label">Pricing</div><h2 class="sec-h">No Surprises.<br>No Hidden Fees.</h2><p class="sec-p">We earn when you earn. Performance-based billing means our incentives are perfectly aligned with yours.</p></div>
+    <div class="pricing-tabs r d1">
+      <button class="ptab active" data-p="billing">Medical Billing</button>
+      <button class="ptab" data-p="priorauth">Prior Auth</button>
+      <button class="ptab" data-p="aidocs">AI Documentation</button>
+    </div>
+
+    <div class="pricing-panel active" id="pp-billing">
+      <div class="pricing-grid">
+        <div class="price-card r d1">
+          <div class="plan-name">Starter</div>
+          <div class="plan-price">4%</div>
+          <div class="plan-unit">of Monthly Collections</div>
+          <ul class="plan-feats"><li>Claim Submission</li><li>Payment Posting</li><li>Basic Reporting</li><li>Email Support</li></ul>
+          <a href="#contact" class="plan-btn">Get Started</a>
+        </div>
+        <div class="price-card hot r d2">
+          <div class="plan-name">Growth</div>
+          <div class="plan-price">5%</div>
+          <div class="plan-unit">of Monthly Collections</div>
+          <ul class="plan-feats"><li>Full Revenue Cycle Mgmt</li><li>Denial Management</li><li>A/R Follow-Up</li><li>Monthly Reports</li><li>Priority Support</li></ul>
+          <a href="#contact" class="plan-btn">Get Started</a>
+        </div>
+        <div class="price-card r d3">
+          <div class="plan-name">Enterprise</div>
+          <div class="plan-price">Custom</div>
+          <div class="plan-unit">Multi-Provider / Multi-Location</div>
+          <ul class="plan-feats"><li>Dedicated Account Manager</li><li>Custom Integrations</li><li>SLA Guarantees</li><li>Onsite Support Options</li></ul>
+          <a href="#contact" class="plan-btn">Talk to Sales</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="pricing-panel" id="pp-priorauth">
+      <div class="pricing-grid" style="max-width:560px;">
+        <div class="price-card r d1">
+          <div class="plan-name">Per Request</div>
+          <div class="plan-price">Ask Us</div>
+          <div class="plan-unit">Volume-Based Pricing</div>
+          <ul class="plan-feats"><li>All auth types</li><li>Imaging, Meds, Surgical</li><li>DME Authorizations</li><li>Referral Coordination</li></ul>
+          <a href="#contact" class="plan-btn">Get a Quote</a>
+        </div>
+        <div class="price-card hot r d2">
+          <div class="plan-name">Monthly Package</div>
+          <div class="plan-price">Ask Us</div>
+          <div class="plan-unit">Bundled Volume Plans</div>
+          <ul class="plan-feats"><li>Priority processing</li><li>Dedicated auth specialist</li><li>Real-time status tracking</li><li>Lower per-auth cost</li></ul>
+          <a href="#contact" class="plan-btn">Get a Quote</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="pricing-panel" id="pp-aidocs">
+      <div class="pricing-grid" style="max-width:560px;">
+        <div class="price-card r d1">
+          <div class="plan-name">Essential</div>
+          <div class="plan-price">$99</div>
+          <div class="plan-unit">Per Provider / Month</div>
+          <ul class="plan-feats"><li>AI Note Generation</li><li>SOAP Notes</li><li>Secure Storage</li><li>Provider Review &amp; Approval</li></ul>
+          <a href="#contact" class="plan-btn">Get Started</a>
+        </div>
+        <div class="price-card hot r d2">
+          <div class="plan-name">Professional</div>
+          <div class="plan-price">$199</div>
+          <div class="plan-unit">Per Provider / Month</div>
+          <ul class="plan-feats"><li>Advanced Templates</li><li>Voice Documentation</li><li>Full EHR Integration</li><li>Analytics Dashboard</li></ul>
+          <a href="#contact" class="plan-btn">Get Started</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== WHY US ===== -->
+<section class="sec" id="why">
+  <div class="sec-inner">
+    <div class="r"><div class="label">Why Gensyn Health</div><h2 class="sec-h">Not Just Another<br>Billing Company</h2></div>
+    <div class="why-list">
+      <div class="why-row r d1">
+        <div class="why-ico-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg></div>
+        <div class="why-title">Industry Expertise</div>
+        <div class="why-desc">Years of experience across specialties, payer types, and practice sizes. We know the billing landscape the quirks, the loopholes, and the patterns that cost providers money.</div>
+      </div>
+      <div class="why-row r d2">
+        <div class="why-ico-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+        <div class="why-title">HIPAA Compliant</div>
+        <div class="why-desc">Patient data is protected with industry-leading encryption at every step. Compliance isn't a checkbox for us it's non-negotiable.</div>
+      </div>
+      <div class="why-row r d3">
+        <div class="why-ico-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></div>
+        <div class="why-title">Transparent Reporting</div>
+        <div class="why-desc">Real-time dashboards and monthly reports show exactly what's happening with your revenue. No spreadsheet archaeology, no surprises.</div>
+      </div>
+      <div class="why-row r d1">
+        <div class="why-ico-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div>
+        <div class="why-title">Dedicated Support</div>
+        <div class="why-desc">A real person picks up your account. Not a ticket queue. Experienced billing specialists who know your practice and your payers.</div>
+      </div>
+      <div class="why-row r d2">
+        <div class="why-ico-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
+        <div class="why-title">AI Innovation</div>
+        <div class="why-desc">Modern AI tools that reduce documentation burden, improve coding accuracy, and keep your practice ahead not scrambling to catch up.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== PROCESS ===== -->
+<section class="sec" id="process">
+  <div class="sec-inner">
+    <div class="r"><div class="label">How It Works</div><h2 class="sec-h" style="color:var(--cream);">Getting Started<br>Is Simple</h2></div>
+    <div class="process-steps r d1">
+      <div class="pstep">
+        <div class="pstep-num">01</div>
+        <div class="pstep-title">Reach Out</div>
+        <div class="pstep-desc">Call or fill out the form. Tell us about your practice, your specialty, and what's giving you headaches right now.</div>
+      </div>
+      <div class="pstep">
+        <div class="pstep-num">02</div>
+        <div class="pstep-title">Free Consult</div>
+        <div class="pstep-desc">We'll walk through your current revenue cycle, identify gaps, and show you exactly how we'd improve your numbers.</div>
+      </div>
+      <div class="pstep">
+        <div class="pstep-num">03</div>
+        <div class="pstep-title">We Onboard Fast</div>
+        <div class="pstep-desc">No long setup timelines. We integrate into your workflow quickly and keep you in the loop at every step.</div>
+      </div>
+      <div class="pstep">
+        <div class="pstep-num">04</div>
+        <div class="pstep-title">Revenue Grows</div>
+        <div class="pstep-desc">Watch your collection rate climb, your denials drop, and your admin burden shrink. We report the results every month.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CONTACT ===== -->
+<section class="sec" id="contact">
+  <div class="sec-inner">
+    <div class="contact-wrap">
+      <div>
+        <div class="label r">Get In Touch</div>
+        <h2 class="sec-h r d1" style="color:var(--cream);">Schedule Your<br><span style="color:var(--orange);">Free Consult</span></h2>
+        <p class="sec-p r d2">No commitment. Just a real conversation about your practice and what better billing could do for it.</p>
+        <div class="contact-meta r d3">
+          <a class="cmeta" href="tel:+12122122121">
+            <span class="cmeta-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg></span>
+            <span><div class="cmeta-l">Phone</div><div class="cmeta-v">(212) 212-2121</div></span>
+          </a>
+          <a class="cmeta" href="mailto:info@gensynhealth.com">
+            <span class="cmeta-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></span>
+            <span><div class="cmeta-l">Email</div><div class="cmeta-v">info@gensynhealth.com</div></span>
+          </a>
+          <div class="cmeta">
+            <span class="cmeta-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></span>
+            <span><div class="cmeta-l">Location</div><div class="cmeta-v">New Jersey, USA · Serving Nationwide</div></span>
+          </div>
+        </div>
+      </div>
+      <div class="r d2">
+        <div id="cfWrap">
+          <form class="cf" id="cf" novalidate>
+            <div class="cf-row">
+              <div class="cf-field"><label for="cf-name">Your Name</label><input type="text" id="cf-name" placeholder="Dr. Jane Doe" required autocomplete="name"></div>
+              <div class="cf-field"><label for="cf-practice">Practice Name</label><input type="text" id="cf-practice" placeholder="Your Clinic"></div>
+            </div>
+            <div class="cf-row">
+              <div class="cf-field">
+                <label for="cf-spec">Specialty</label>
+                <select id="cf-spec">
+                  <option value="">Select…</option>
+                  <option>Internal Medicine</option><option>Family Medicine</option>
+                  <option>Pediatrics</option><option>OB/GYN</option>
+                  <option>Telemedicine</option><option>Urgent Care</option><option>Other</option>
+                </select>
+              </div>
+              <div class="cf-field"><label for="cf-phone">Phone</label><input type="tel" id="cf-phone" placeholder="(555) 000-0000" autocomplete="tel"></div>
+            </div>
+            <div class="cf-field"><label for="cf-email">Email Address</label><input type="email" id="cf-email" placeholder="you@yourpractice.com" required autocomplete="email"></div>
+            <div class="cf-field"><label for="cf-msg">How Can We Help?</label><textarea id="cf-msg" placeholder="Tell us about your billing needs or current challenges…"></textarea></div>
+            <button type="submit" class="cf-submit">Send Inquiry →</button>
+          </form>
+          <div class="cf-success" id="cfOk">
+            <div class="cf-success-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <h3>You're In.</h3>
+            <p>We'll reach out within one business day to schedule your free consultation.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer>
+  <div class="foot-logo">
+    <img src="logo.svg" alt="Gensyn Health"
+      onerror="this.outerHTML='<span style=\'font-family:var(--fd);font-weight:900;font-size:1rem;color:var(--cream);\'>Gensyn <span style=\'color:var(--orange);\'>Health</span></span>'">
+  </div>
+  <div class="foot-links">
+    <a href="#services">Services</a><a href="#ai">AI Docs</a>
+    <a href="#pricing">Pricing</a><a href="#why">Why Us</a>
+    <a href="#contact">Contact</a>
+    <a href="tel:+12122122121">(212) 212-2121</a>
+    <a href="mailto:info@gensynhealth.com">info@gensynhealth.com</a>
+  </div>
+  <div class="foot-note">© 2025 Gensyn Health LLC · NJ, USA · HIPAA Compliant</div>
+</footer>
+
+<!-- ===== MOBILE STICKY BAR ===== -->
+<div class="mob-bar">
+  <a class="m-call" href="tel:+12122122121">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+    Call (212) 212-2121
+  </a>
+  <a class="m-msg" href="#contact">Free Consult</a>
+</div>
+
+<script>
+/* ===== HAMBURGER ===== */
+(function(){
+  const btn=document.getElementById('hbg'),nav=document.getElementById('mobNav');let o=false;
+  btn.addEventListener('click',()=>{o=!o;btn.classList.toggle('open',o);nav.classList.toggle('open',o);document.body.style.overflow=o?'hidden':'';});
+  nav.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{o=false;btn.classList.remove('open');nav.classList.remove('open');document.body.style.overflow='';}));
+})();
+
+/* ===== SCROLL REVEAL ===== */
+(function(){
+  if(window.matchMedia('(prefers-reduced-motion:reduce)').matches)return;
+  const els=document.querySelectorAll('.r');
+  const obs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('v');obs.unobserve(e.target);}});},{threshold:.1,rootMargin:'0px 0px -40px 0px'});
+  els.forEach(e=>obs.observe(e));
+})();
+
+/* ===== SERVICES ACCORDION ===== */
+(function(){
+  const panels=document.querySelectorAll('.svc-panel');
+  panels.forEach(p=>{
+    p.addEventListener('click',()=>{
+      if(p.classList.contains('open'))return;
+      panels.forEach(pp=>pp.classList.remove('open'));
+      p.classList.add('open');
+    });
+  });
+})();
+
+/* ===== TEXT SCRAMBLE ===== */
+(function(){
+  const el=document.getElementById('scramWord');
+  const words=['Maximize','Optimize','Accelerate','Streamline','Amplify'];
+  const chars='!<>-_\\/[]{}—=+*^?#abcdefghjklmnopqrstvwxyz';
+  let wi=0,frame=0,q=[],raf;
+  function scramble(t){
+    const old=el.textContent,len=Math.max(old.length,t.length);
+    q=[];frame=0;
+    for(let i=0;i<len;i++){const s=Math.floor(Math.random()*18),e=s+Math.floor(Math.random()*18)+5;q.push({from:old[i]||'',to:t[i]||'',start:s,end:e,char:''});}
+    cancelAnimationFrame(raf);tick();
+  }
+  function tick(){
+    let out='',done=0;
+    q.forEach(c=>{
+      if(frame>=c.end){out+=c.to;done++;}
+      else if(frame>=c.start){c.char=chars[Math.floor(Math.random()*chars.length)];out+=`<span style="color:var(--orange);opacity:.5">${c.char}</span>`;}
+      else out+=c.from;
+    });
+    el.innerHTML=out;frame++;
+    if(done<q.length)raf=requestAnimationFrame(tick);
+  }
+  setInterval(()=>{wi=(wi+1)%words.length;scramble(words[wi]);},3500);
+})();
+
+/* ===== TERMINAL TYPEWRITER ===== */
+(function(){
+  const l1=document.getElementById('tl1'),l2=document.getElementById('tl2'),l3=document.getElementById('tl3');
+  if(!l1)return;
+  const t1='Patient c/o fatigue x3wks, mild dyspnea on exertion.';
+  const t2='BP 126/80 · HR 74 · SpO2 98% · Temp 98.6°F';
+  const t3='[AI] SOAP note ready. Tap to review & push to EHR.';
+  function type(el,txt,spd,cb){let i=0;const t=setInterval(()=>{el.textContent+=txt[i]||'';i++;if(i>=txt.length){clearInterval(t);if(cb)setTimeout(cb,400);}},spd);}
+  let started=false;
+  const obs=new IntersectionObserver(es=>{
+    if(es[0].isIntersecting&&!started){started=true;obs.disconnect();
+      setTimeout(()=>{type(l1,t1,30,()=>type(l2,t2,22,()=>type(l3,t3,28)));},600);}
+  },{threshold:.3});
+  const trm=document.querySelector('.terminal');if(trm)obs.observe(trm);
+})();
+
+/* ===== PRICING TABS ===== */
+(function(){
+  document.querySelectorAll('.ptab').forEach(tab=>{
+    tab.addEventListener('click',()=>{
+      const p=tab.getAttribute('data-p');
+      document.querySelectorAll('.ptab').forEach(t=>t.classList.remove('active'));
+      tab.classList.add('active');
+      document.querySelectorAll('.pricing-panel').forEach(pp=>pp.classList.toggle('active',pp.id==='pp-'+p));
+    });
+  });
+})();
+
+/* ===== STAT COUNTER ===== */
+(function(){
+  if(window.matchMedia('(prefers-reduced-motion:reduce)').matches)return;
+  const els=document.querySelectorAll('.stat-n[data-target]');
+  const obs=new IntersectionObserver(es=>{
+    es.forEach(e=>{
+      if(!e.isIntersecting)return;obs.unobserve(e.target);
+      const el=e.target,tgt=+el.getAttribute('data-target'),sfx=el.getAttribute('data-suffix')||'';
+      let cur=0;const inc=tgt/60;
+      const t=setInterval(()=>{cur=Math.min(cur+inc,tgt);el.textContent=Math.round(cur)+sfx;if(cur>=tgt)clearInterval(t);},1500/60);
+    });
+  },{threshold:.6});
+  els.forEach(e=>obs.observe(e));
+})();
+
+/* ===== CONTACT FORM ===== */
+(function(){
+  const form=document.getElementById('cf'),ok=document.getElementById('cfOk');
+  form.addEventListener('submit',e=>{
+    e.preventDefault();
+    const email=document.getElementById('cf-email').value.trim();
+    const name=document.getElementById('cf-name').value.trim();
+    if(!name||!email||!email.includes('@')){
+      const bad=!name?document.getElementById('cf-name'):document.getElementById('cf-email');
+      bad.focus();bad.style.borderColor='rgba(255,80,80,.8)';setTimeout(()=>{bad.style.borderColor='';},2000);return;
+    }
+    form.style.display='none';ok.classList.add('show');
+  });
+})();
+</script>
+</body>
+</html>
